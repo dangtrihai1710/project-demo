@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Lưu thông tin người dùng vào localStorage
                 localStorage.setItem('user', JSON.stringify(data.user));
-                localStorage.setItem('token', data.token || 'demo-token');
+                localStorage.setItem('token', data.token);
+                
+                // Đồng bộ giỏ hàng cục bộ với giỏ hàng trên máy chủ
+                await syncCartAfterLogin(data.user.id, data.token);
                 
                 // Hiển thị thông báo thành công
                 showAlert('Đăng nhập thành công!', 'success');
@@ -94,12 +97,55 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Đồng bộ giỏ hàng cục bộ với giỏ hàng trên máy chủ khi đăng nhập
+async function syncCartAfterLogin(userId, token) {
+    try {
+        // Lấy giỏ hàng cục bộ
+        const localCart = JSON.parse(localStorage.getItem('cart')) || { items: [], total: 0 };
+        
+        if (localCart.items.length === 0) {
+            // Nếu giỏ hàng cục bộ trống, không cần đồng bộ
+            return;
+        }
+        
+        // Gửi giỏ hàng cục bộ lên máy chủ
+        const response = await fetch('/api/cart/sync', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'user-id': userId
+            },
+            body: JSON.stringify(localCart)
+        });
+        
+        if (!response.ok) {
+            throw new Error('Không thể đồng bộ giỏ hàng');
+        }
+        
+        // Xóa giỏ hàng cục bộ sau khi đồng bộ
+        localStorage.removeItem('cart');
+        
+        // Cập nhật hiển thị số lượng sản phẩm trong giỏ hàng
+        updateCartCount();
+        
+    } catch (error) {
+        console.error('Error syncing cart:', error);
+    }
+}
+
 // Kiểm tra trạng thái đăng nhập
 async function checkAuthStatus() {
     try {
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            return false;
+        }
+        
         const response = await fetch('/api/auth/check', {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
         

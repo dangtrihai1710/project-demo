@@ -3,8 +3,38 @@
     "items": [],
     "total": 0
   },
+  "2": {
+    "items": [],
+    "total": 0
+  },
   "guest": {
     "items": [],
     "total": 0
+  },
+  "1743791911396": {
+    "items": [
+      {
+        "id": "1743793384425",
+        "productId": "1",
+        "name": "Laptop Gaming Acer Nitro 5",
+        "price": 22990000,
+        "image": "/images/laptop-nitro-5.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 22990000
+  },
+  "1743793687134": {
+    "items": [
+      {
+        "id": "1743794034592",
+        "productId": "1",
+        "name": "Laptop Gaming Acer Nitro 5",
+        "price": 22990000,
+        "image": "/images/laptop-nitro-5.jpg",
+        "quantity": 1
+      }
+    ],
+    "total": 22990000
   }
 }

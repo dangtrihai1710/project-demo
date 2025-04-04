@@ -63,14 +63,15 @@ exports.login = (req, res) => {
       return res.status(401).json({ message: 'Email hoặc mật khẩu không đúng' });
     }
 
-    // Trong ứng dụng thực tế, bạn sẽ tạo JWT token ở đây
-    // và trả về token thay vì thông tin người dùng
+    // Tạo token (trong ứng dụng thực tế, bạn sẽ sử dụng JWT)
+    const token = `demo-token-${user.id}-${Date.now()}`;
 
-    // Trả về thông tin người dùng (không bao gồm mật khẩu)
+    // Trả về thông tin người dùng (không bao gồm mật khẩu) và token
     const { password: _, ...userWithoutPassword } = user;
     res.status(200).json({
       message: 'Đăng nhập thành công',
-      user: userWithoutPassword
+      user: userWithoutPassword,
+      token: token
     });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi đăng nhập', error: error.message });
@@ -79,13 +80,27 @@ exports.login = (req, res) => {
 
 // Kiểm tra trạng thái đăng nhập
 exports.checkAuth = (req, res) => {
-  // Trong ứng dụng thực tế, bạn sẽ xác thực JWT token ở đây
+  // Lấy token từ header Authorization
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(200).json({
+      isAuthenticated: false,
+      message: 'Bạn chưa đăng nhập'
+    });
+  }
+  
+  const token = authHeader.split(' ')[1];
+  
+  // Trong ứng dụng thực tế, bạn sẽ xác thực JWT token
   // và trả về thông tin người dùng từ token
-
-  // Vì đây là demo, chúng ta giả định người dùng đã đăng nhập
+  
+  // Ở đây chúng ta giả định token hợp lệ nếu nó chứa 'demo-token'
+  const isValid = token && token.includes('demo-token');
+  
   res.status(200).json({
-    isAuthenticated: false,
-    message: 'Bạn chưa đăng nhập'
+    isAuthenticated: isValid,
+    message: isValid ? 'Đã đăng nhập' : 'Bạn chưa đăng nhập'
   });
 };
 

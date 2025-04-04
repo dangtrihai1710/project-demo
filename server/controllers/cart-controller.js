@@ -32,10 +32,35 @@ const saveCarts = (carts) => {
   fs.writeFileSync(cartsFile, JSON.stringify(carts, null, 2), 'utf8');
 };
 
+// Middleware xác thực người dùng
+exports.authenticateUser = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Bạn cần đăng nhập để truy cập giỏ hàng' });
+  }
+  
+  const token = authHeader.split(' ')[1];
+  
+  // Trong ứng dụng thực tế, bạn sẽ xác thực JWT token ở đây
+  // và trích xuất userId từ token
+  
+  // Ở đây chúng ta lấy userId từ headers
+  const userId = req.headers['user-id'];
+  
+  if (!userId) {
+    return res.status(401).json({ message: 'Không thể xác định người dùng' });
+  }
+  
+  // Lưu userId vào req để sử dụng trong các middleware tiếp theo
+  req.userId = userId;
+  next();
+};
+
 // Lấy giỏ hàng của người dùng
 exports.getCart = (req, res) => {
   try {
-    const userId = req.headers['user-id'] || 'guest'; // Trong thực tế, bạn sẽ lấy userId từ token
+    const userId = req.userId; // Lấy từ middleware xác thực
     const carts = getCarts();
     
     // Nếu giỏ hàng chưa tồn tại, tạo mới
@@ -54,7 +79,7 @@ exports.getCart = (req, res) => {
 exports.addToCart = (req, res) => {
   try {
     const { productId, quantity = 1 } = req.body;
-    const userId = req.headers['user-id'] || 'guest';
+    const userId = req.userId; // Lấy từ middleware xác thực
     const carts = getCarts();
     const products = getProducts();
     
@@ -104,7 +129,7 @@ exports.updateCartItem = (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
-    const userId = req.headers['user-id'] || 'guest';
+    const userId = req.userId; // Lấy từ middleware xác thực
     const carts = getCarts();
     
     if (!carts[userId]) {
@@ -141,7 +166,7 @@ exports.updateCartItem = (req, res) => {
 exports.removeFromCart = (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.headers['user-id'] || 'guest';
+    const userId = req.userId; // Lấy từ middleware xác thực
     const carts = getCarts();
     
     if (!carts[userId]) {
@@ -165,7 +190,7 @@ exports.removeFromCart = (req, res) => {
 // Xóa toàn bộ giỏ hàng
 exports.clearCart = (req, res) => {
   try {
-    const userId = req.headers['user-id'] || 'guest';
+    const userId = req.userId; // Lấy từ middleware xác thực
     const carts = getCarts();
     
     if (!carts[userId]) {
@@ -179,5 +204,50 @@ exports.clearCart = (req, res) => {
     res.status(200).json(carts[userId]);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi xóa toàn bộ giỏ hàng', error: error.message });
+  }
+};
+
+// Đồng bộ hóa giỏ hàng cục bộ với giỏ hàng trên máy chủ
+exports.syncCart = (req, res) => {
+  try {
+    const localCart = req.body;
+    const userId = req.userId; // Lấy từ middleware xác thực
+    const carts = getCarts();
+    
+    // Nếu giỏ hàng chưa tồn tại, sử dụng giỏ hàng cục bộ
+    if (!carts[userId]) {
+      carts[userId] = localCart;
+      saveCarts(carts);
+      return res.status(200).json(carts[userId]);
+    }
+    
+    // Nếu đã có giỏ hàng trên máy chủ, hợp nhất hai giỏ hàng
+    localCart.items.forEach(localItem => {
+      const existingItemIndex = carts[userId].items.findIndex(item => item.productId === localItem.productId);
+      
+      if (existingItemIndex !== -1) {
+        // Nếu sản phẩm đã có, tăng số lượng
+        carts[userId].items[existingItemIndex].quantity += localItem.quantity;
+      } else {
+        // Nếu sản phẩm chưa có, thêm mới
+        carts[userId].items.push({
+          id: Date.now().toString() + '-' + localItem.productId,
+          productId: localItem.productId,
+          name: localItem.name,
+          price: localItem.price,
+          image: localItem.image,
+          quantity: localItem.quantity
+        });
+      }
+    });
+    
+    // Tính lại tổng giá trị giỏ hàng
+    carts[userId].total = carts[userId].items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    
+    saveCarts(carts);
+    
+    res.status(200).json(carts[userId]);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi đồng bộ giỏ hàng', error: error.message });
   }
 };

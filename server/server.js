@@ -7,6 +7,30 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Middleware xác thực toàn cục
+const authenticate = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    req.isAuthenticated = false;
+    req.userId = null;
+  } else {
+    const token = authHeader.split(' ')[1];
+    
+    // Trong ứng dụng thực tế, bạn sẽ giải mã JWT token để lấy userId
+    // Ở đây chúng ta giả định token hợp lệ nếu nó chứa 'demo-token'
+    const isTokenValid = token && token.includes('demo-token');
+    
+    req.isAuthenticated = isTokenValid;
+    req.userId = req.headers['user-id'] || null;
+  }
+  
+  next();
+};
+
+// Áp dụng middleware xác thực cho tất cả các routes
+app.use(authenticate);
+
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -19,9 +43,20 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/auth', authRoutes);
 
+// Serve components
+app.get('/components/:name', (req, res) => {
+  const componentName = req.params.name;
+  res.sendFile(path.join(__dirname, `../public/components/${componentName}`));
+});
+
 // Serve index.html cho tất cả các route frontend
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  if (req.url.endsWith('.html')) {
+    const htmlFile = req.url.substring(1);
+    res.sendFile(path.join(__dirname, '../public', htmlFile));
+  } else {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  }
 });
 
 // Start server

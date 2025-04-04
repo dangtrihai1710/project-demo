@@ -58,7 +58,7 @@ function displayProducts(products, containerSelector = '.product-list') {
                         </div>
                         <div class="d-grid gap-2">
                             <a href="/product-detail.html?id=${product.id}" class="btn btn-outline-primary">Xem chi tiết</a>
-                            <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}" onclick="addToCart('${product.id}')">
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addToCart('${product.id}')" data-product-id="${product.id}">
                                 <i class="bi bi-cart-plus"></i> Thêm vào giỏ
                             </button>
                         </div>
@@ -67,6 +67,19 @@ function displayProducts(products, containerSelector = '.product-list') {
             </div>
         `;
         container.appendChild(productCard);
+    });
+    
+    // Đảm bảo tất cả nút "Thêm vào giỏ" đều có sự kiện click
+    attachAddToCartEvents();
+}
+
+// Gắn sự kiện cho các nút "Thêm vào giỏ"
+function attachAddToCartEvents() {
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        const productId = button.getAttribute('data-product-id');
+        button.onclick = function() {
+            addToCart(productId);
+        };
     });
 }
 

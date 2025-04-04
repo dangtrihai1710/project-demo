@@ -1,18 +1,26 @@
 [
-    {
-      "id": "1",
-      "username": "admin",
-      "email": "admin@example.com",
-      "password": "admin123",
-      "role": "admin",
-      "createdAt": "2023-01-01T00:00:00.000Z"
-    },
-    {
-      "id": "2",
-      "username": "user1",
-      "email": "user1@example.com",
-      "password": "user123",
-      "role": "user",
-      "createdAt": "2023-01-02T10:30:00.000Z"
-    }
-  ]
+  {
+    "id": "1",
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "admin123",
+    "role": "admin",
+    "createdAt": "2023-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "username": "user1",
+    "email": "user1@example.com",
+    "password": "user123",
+    "role": "user",
+    "createdAt": "2023-01-02T10:30:00.000Z"
+  },
+  {
+    "id": "1743793687134",
+    "username": "gg",
+    "email": "haic1948@gmail.com",
+    "password": "hai123",
+    "role": "user",
+    "createdAt": "2025-04-04T19:08:07.134Z"
+  }
+]
