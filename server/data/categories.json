@@ -1,0 +1,122 @@
+[
+    {
+      "id": "laptop",
+      "name": "Laptop",
+      "description": "Các dòng laptop gaming, văn phòng, đồ họa từ các thương hiệu hàng đầu",
+      "image": "/images/categories/laptop.jpg",
+      "slug": "laptop",
+      "parentId": null,
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": "pc",
+      "name": "PC & Máy tính",
+      "description": "PC đồng bộ, máy tính để bàn với cấu hình mạnh mẽ, đáp ứng mọi nhu cầu",
+      "image": "/images/categories/pc.jpg",
+      "slug": "pc-may-tinh",
+      "parentId": null,
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": "components",
+      "name": "Linh kiện máy tính",
+      "description": "Các linh kiện máy tính như CPU, RAM, ổ cứng, card đồ họa...",
+      "image": "/images/categories/components.jpg",
+      "slug": "linh-kien-may-tinh",
+      "parentId": null,
+      "featured": true,
+      "order": 3
+    },
+    {
+      "id": "monitor",
+      "name": "Màn hình",
+      "description": "Màn hình máy tính gaming, đồ họa, văn phòng với nhiều kích thước và độ phân giải",
+      "image": "/images/categories/monitor.jpg",
+      "slug": "man-hinh",
+      "parentId": null,
+      "featured": true,
+      "order": 4
+    },
+    {
+      "id": "gaming-gear",
+      "name": "Gaming Gear",
+      "description": "Các thiết bị gaming như chuột, bàn phím, tai nghe, ghế gaming...",
+      "image": "/images/categories/gaming-gear.jpg",
+      "slug": "gaming-gear",
+      "parentId": null,
+      "featured": true,
+      "order": 5
+    },
+    {
+      "id": "networking",
+      "name": "Thiết bị mạng",
+      "description": "Các thiết bị mạng như router, switch, access point, card mạng...",
+      "image": "/images/categories/networking.jpg",
+      "slug": "thiet-bi-mang",
+      "parentId": null,
+      "featured": false,
+      "order": 6
+    },
+    {
+      "id": "laptop-gaming",
+      "name": "Laptop Gaming",
+      "description": "Laptop chuyên dụng cho game thủ với hiệu năng cao",
+      "image": "/images/categories/laptop-gaming.jpg",
+      "slug": "laptop-gaming",
+      "parentId": "laptop",
+      "featured": false,
+      "order": 1
+    },
+    {
+      "id": "laptop-office",
+      "name": "Laptop Văn phòng",
+      "description": "Laptop phù hợp cho công việc văn phòng, học tập",
+      "image": "/images/categories/laptop-office.jpg",
+      "slug": "laptop-van-phong",
+      "parentId": "laptop",
+      "featured": false,
+      "order": 2
+    },
+    {
+      "id": "laptop-workstation",
+      "name": "Laptop Workstation",
+      "description": "Laptop dành cho các công việc đồ họa, kỹ thuật nặng",
+      "image": "/images/categories/laptop-workstation.jpg",
+      "slug": "laptop-workstation",
+      "parentId": "laptop",
+      "featured": false,
+      "order": 3
+    },
+    {
+      "id": "keyboard",
+      "name": "Bàn phím",
+      "description": "Bàn phím cơ, bàn phím gaming với nhiều switch khác nhau",
+      "image": "/images/categories/keyboard.jpg",
+      "slug": "ban-phim",
+      "parentId": "gaming-gear",
+      "featured": false,
+      "order": 1
+    },
+    {
+      "id": "mouse",
+      "name": "Chuột",
+      "description": "Chuột gaming, chuột văn phòng với cảm biến chính xác",
+      "image": "/images/categories/mouse.jpg",
+      "slug": "chuot",
+      "parentId": "gaming-gear",
+      "featured": false,
+      "order": 2
+    },
+    {
+      "id": "headphone",
+      "name": "Tai nghe",
+      "description": "Tai nghe gaming, tai nghe chuyên nghiệp với âm thanh sống động",
+      "image": "/images/categories/headphone.jpg",
+      "slug": "tai-nghe",
+      "parentId": "gaming-gear",
+      "featured": false,
+      "order": 3
+    }
+  ]

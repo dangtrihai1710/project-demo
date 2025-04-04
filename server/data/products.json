@@ -1,30 +1,192 @@
- 
 [
-    {
-      "id": "1",
-      "name": "Laptop Gaming Acer Nitro 5",
-      "description": "Laptop gaming hiệu năng cao với GPU NVIDIA GTX 1650",
-      "price": 22990000,
-      "image": "/images/laptop-nitro-5.jpg",
-      "category": "laptop",
-      "createdAt": "2023-01-15T14:30:00.000Z"
+  {
+    "id": "1",
+    "name": "Laptop Gaming Acer Nitro 5",
+    "description": "Laptop gaming hiệu năng cao với GPU NVIDIA GTX 1650",
+    "price": 22990000,
+    "image": "/images/laptop-nitro-5.jpg",
+    "category": "laptop-gaming",
+    "createdAt": "2023-01-15T14:30:00.000Z",
+    "specifications": {
+      "cpu": "Intel Core i5-11400H",
+      "ram": "8GB DDR4",
+      "storage": "512GB SSD NVMe",
+      "gpu": "NVIDIA GeForce GTX 1650 4GB",
+      "display": "15.6 inch FHD IPS 144Hz",
+      "os": "Windows 11 Home"
     },
-    {
-      "id": "2",
-      "name": "Chuột gaming Logitech G502 HERO",
-      "description": "Chuột gaming cao cấp với cảm biến HERO 25K",
-      "price": 1790000,
-      "image": "/images/mouse-g502.jpg",
-      "category": "mouse",
-      "createdAt": "2023-01-20T09:15:00.000Z"
+    "stock": 15,
+    "discount": 5
+  },
+  {
+    "id": "2",
+    "name": "Chuột gaming Logitech G502 HERO",
+    "description": "Chuột gaming cao cấp với cảm biến HERO 25K",
+    "price": 1790000,
+    "image": "/images/mouse-g502.jpg",
+    "category": "mouse",
+    "createdAt": "2023-01-20T09:15:00.000Z",
+    "specifications": {
+      "sensor": "HERO 25K",
+      "dpi": "25.600 DPI",
+      "polling_rate": "1000Hz",
+      "buttons": "11 nút có thể lập trình",
+      "weight": "121g (có thể điều chỉnh)",
+      "rgb": "LIGHTSYNC RGB"
     },
-    {
-      "id": "3",
-      "name": "Bàn phím cơ Keychron K2",
-      "description": "Bàn phím cơ với kết nối Bluetooth 5.1",
-      "price": 2190000,
-      "image": "/images/keyboard-keychron.jpg",
-      "category": "keyboard",
-      "createdAt": "2023-01-25T11:45:00.000Z"
-    }
-  ]
+    "stock": 30,
+    "discount": 0
+  },
+  {
+    "id": "3",
+    "name": "Bàn phím cơ Keychron K2",
+    "description": "Bàn phím cơ với kết nối Bluetooth 5.1",
+    "price": 2190000,
+    "image": "/images/keyboard-keychron.jpg",
+    "category": "keyboard",
+    "createdAt": "2023-01-25T11:45:00.000Z",
+    "specifications": {
+      "switch": "Gateron Brown",
+      "keycaps": "PBT Double-shot",
+      "layout": "75% (84 phím)",
+      "connection": "Bluetooth 5.1 và USB Type-C",
+      "battery": "4000mAh",
+      "rgb": "RGB Backlight"
+    },
+    "stock": 20,
+    "discount": 10
+  },
+  {
+    "id": "4",
+    "name": "Laptop Dell XPS 13",
+    "description": "Laptop mỏng nhẹ với màn hình InfinityEdge, thiết kế cao cấp",
+    "price": 36990000,
+    "image": "/images/laptop-dell-xps.jpg",
+    "category": "laptop-office",
+    "createdAt": "2023-02-10T08:45:00.000Z",
+    "specifications": {
+      "cpu": "Intel Core i7-1165G7",
+      "ram": "16GB LPDDR4x",
+      "storage": "512GB SSD NVMe",
+      "gpu": "Intel Iris Xe Graphics",
+      "display": "13.4 inch FHD+ IPS 60Hz",
+      "os": "Windows 11 Pro"
+    },
+    "stock": 8,
+    "discount": 0
+  },
+  {
+    "id": "5",
+    "name": "Màn hình gaming MSI Optix G27CQ4",
+    "description": "Màn hình cong 27 inch dành cho game thủ",
+    "price": 7990000,
+    "image": "/images/monitor-msi.jpg",
+    "category": "monitor",
+    "createdAt": "2023-02-15T13:20:00.000Z",
+    "specifications": {
+      "size": "27 inch",
+      "resolution": "2560 x 1440 (WQHD)",
+      "panel": "VA",
+      "refresh_rate": "165Hz",
+      "response_time": "1ms",
+      "curvature": "1500R"
+    },
+    "stock": 12,
+    "discount": 15
+  },
+  {
+    "id": "6",
+    "name": "Tai nghe SteelSeries Arctis 7",
+    "description": "Tai nghe gaming không dây với âm thanh vòm 7.1",
+    "price": 3690000,
+    "image": "/images/headphone-steelseries.jpg",
+    "category": "headphone",
+    "createdAt": "2023-02-20T10:30:00.000Z",
+    "specifications": {
+      "type": "Over-ear",
+      "connection": "Wireless 2.4GHz",
+      "frequency": "20-20000 Hz",
+      "battery": "24 giờ",
+      "microphone": "Retractable ClearCast",
+      "weight": "280g"
+    },
+    "stock": 18,
+    "discount": 0
+  },
+  {
+    "id": "7",
+    "name": "PC Gaming MSI MEG Aegis Ti5",
+    "description": "PC gaming cao cấp với thiết kế độc đáo và hiệu năng vượt trội",
+    "price": 85990000,
+    "image": "/images/pc-msi.jpg",
+    "category": "pc",
+    "createdAt": "2023-03-05T09:10:00.000Z",
+    "specifications": {
+      "cpu": "Intel Core i9-11900K",
+      "ram": "64GB DDR4 3200MHz",
+      "storage": "2TB SSD + 3TB HDD",
+      "gpu": "NVIDIA GeForce RTX 3090 24GB",
+      "os": "Windows 11 Pro",
+      "psu": "850W 80+ Gold"
+    },
+    "stock": 3,
+    "discount": 0
+  },
+  {
+    "id": "8",
+    "name": "Laptop MSI Creator Z16",
+    "description": "Laptop cho người sáng tạo nội dung với màn hình 16:10",
+    "price": 59990000,
+    "image": "/images/laptop-msi-creator.jpg",
+    "category": "laptop-workstation",
+    "createdAt": "2023-03-10T11:15:00.000Z",
+    "specifications": {
+      "cpu": "Intel Core i7-11800H",
+      "ram": "32GB DDR4",
+      "storage": "1TB SSD NVMe",
+      "gpu": "NVIDIA GeForce RTX 3060 6GB",
+      "display": "16 inch QHD+ IPS 120Hz",
+      "os": "Windows 11 Pro"
+    },
+    "stock": 6,
+    "discount": 10
+  },
+  {
+    "id": "9",
+    "name": "Router ASUS RT-AX86U",
+    "description": "Router WiFi 6 cao cấp với tính năng gaming",
+    "price": 5990000,
+    "image": "/images/router-asus.jpg",
+    "category": "networking",
+    "createdAt": "2023-03-15T14:45:00.000Z",
+    "specifications": {
+      "wifi_standard": "WiFi 6 (802.11ax)",
+      "speed": "5700 Mbps",
+      "ports": "2.5G WAN, 4x Gigabit LAN, 2x USB",
+      "cpu": "1.8GHz Quad-Core",
+      "memory": "1GB RAM",
+      "security": "AiProtection Pro"
+    },
+    "stock": 10,
+    "discount": 0
+  },
+  {
+    "id": "10",
+    "name": "Card đồ họa NVIDIA GeForce RTX 3080",
+    "description": "Card đồ họa cao cấp với hiệu suất ray tracing vượt trội",
+    "price": 24990000,
+    "image": "/images/gpu-rtx3080.jpg",
+    "category": "components",
+    "createdAt": "2023-03-20T16:30:00.000Z",
+    "specifications": {
+      "gpu": "NVIDIA GeForce RTX 3080",
+      "memory": "10GB GDDR6X",
+      "boost_clock": "1710 MHz",
+      "cuda_cores": "8704",
+      "interface": "PCI Express 4.0",
+      "power": "320W"
+    },
+    "stock": 5,
+    "discount": 5
+  }
+]

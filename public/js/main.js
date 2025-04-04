@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tải danh sách sản phẩm nổi bật
     loadFeaturedProducts();
     
+    // Tải danh mục nổi bật
+    loadFeaturedCategories();
+    
     // Khởi tạo các sự kiện và chức năng khác
     initializeEvents();
 });
@@ -15,6 +18,69 @@ async function loadFeaturedProducts() {
         const featuredProducts = products.slice(0, 6); // Lấy tối đa 6 sản phẩm
         displayProducts(featuredProducts, '.product-list');
     }
+}
+
+// Tải danh mục nổi bật
+async function loadFeaturedCategories() {
+    try {
+        // Lấy danh mục nổi bật
+        const response = await fetch('/api/categories');
+        
+        if (!response.ok) {
+            throw new Error('Không thể tải danh mục');
+        }
+        
+        const categories = await response.json();
+        
+        // Lọc danh mục nổi bật
+        const featuredCategories = categories.filter(category => category.featured && category.parentId === null);
+        
+        // Hiển thị tối đa 3 danh mục nổi bật
+        const categoryContainer = document.querySelector('.row.mb-4 .col-12').nextElementSibling.parentElement;
+        
+        if (categoryContainer && featuredCategories.length > 0) {
+            // Xóa nội dung cũ
+            categoryContainer.innerHTML = `
+                <div class="col-12">
+                    <h2 class="border-bottom pb-2">Danh mục nổi bật</h2>
+                </div>
+            `;
+            
+            // Hiển thị danh mục nổi bật
+            featuredCategories.slice(0, 3).forEach(category => {
+                const categoryColumn = document.createElement('div');
+                categoryColumn.className = 'col-md-4 mb-3';
+                categoryColumn.innerHTML = `
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <i class="bi ${getCategoryIcon(category.id)} fs-1 text-primary"></i>
+                            <h5 class="card-title mt-3">${category.name}</h5>
+                            <p class="card-text">${category.description}</p>
+                            <a href="/category.html?id=${category.id}" class="btn btn-outline-primary">Xem thêm</a>
+                        </div>
+                    </div>
+                `;
+                categoryContainer.appendChild(categoryColumn);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading featured categories:', error);
+    }
+}
+
+// Lấy icon tương ứng cho từng danh mục
+function getCategoryIcon(categoryId) {
+    const icons = {
+        'laptop': 'bi-laptop',
+        'pc': 'bi-pc-display',
+        'components': 'bi-cpu',
+        'monitor': 'bi-display',
+        'gaming-gear': 'bi-controller',
+        'networking': 'bi-router',
+        'default': 'bi-box'
+    };
+    
+    return icons[categoryId] || icons['default'];
 }
 
 // Khởi tạo các sự kiện

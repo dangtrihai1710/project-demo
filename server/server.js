@@ -38,10 +38,12 @@ app.use(express.static(path.join(__dirname, '../public')));
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
 const authRoutes = require('./routes/auth');
+const categoryRoutes = require('./routes/categories');
 
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Serve components
 app.get('/components/:name', (req, res) => {

@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkLoginStatus();
                 // Cập nhật số lượng trong giỏ hàng
                 updateCartCount();
+                // Tải danh mục cho menu dropdown
+                loadCategoriesForMenu();
             })
             .catch(error => console.error('Error loading header:', error));
     }
@@ -25,6 +27,82 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error loading footer:', error));
     }
 });
+
+// Tải danh mục cho menu dropdown
+async function loadCategoriesForMenu() {
+    try {
+        // Lấy tất cả danh mục
+        const response = await fetch('/api/categories');
+        
+        if (!response.ok) {
+            throw new Error('Không thể tải danh mục');
+        }
+        
+        const categories = await response.json();
+        
+        // Lọc danh mục chính (không có parentId)
+        const mainCategories = categories.filter(category => category.parentId === null);
+        
+        // Lấy dropdown sản phẩm
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        
+        if (!dropdownMenu) {
+            return;
+        }
+        
+        // Xóa mục mặc định
+        dropdownMenu.innerHTML = '';
+        
+        // Thêm các danh mục vào dropdown
+        mainCategories.forEach(category => {
+            const categoryItem = document.createElement('li');
+            const categoryLink = document.createElement('a');
+            categoryLink.href = `/category.html?id=${category.id}`;
+            categoryLink.className = 'dropdown-item';
+            categoryLink.textContent = category.name;
+            categoryItem.appendChild(categoryLink);
+            dropdownMenu.appendChild(categoryItem);
+            
+            // Lọc và hiển thị danh mục con trong submenu (nếu có)
+            const subCategories = categories.filter(subCat => subCat.parentId === category.id);
+            
+            if (subCategories.length > 0 && dropdownMenu.classList.contains('dropdown-submenu')) {
+                // Nếu có submenu, thêm vào
+                const subMenu = document.createElement('ul');
+                subMenu.className = 'dropdown-menu';
+                
+                subCategories.forEach(subCategory => {
+                    const subItem = document.createElement('li');
+                    const subLink = document.createElement('a');
+                    subLink.href = `/category.html?id=${subCategory.id}`;
+                    subLink.className = 'dropdown-item';
+                    subLink.textContent = subCategory.name;
+                    subItem.appendChild(subLink);
+                    subMenu.appendChild(subItem);
+                });
+                
+                categoryItem.appendChild(subMenu);
+            }
+        });
+        
+        // Thêm divider
+        const divider = document.createElement('li');
+        divider.innerHTML = '<hr class="dropdown-divider">';
+        dropdownMenu.appendChild(divider);
+        
+        // Thêm mục "Tất cả sản phẩm"
+        const allProductsItem = document.createElement('li');
+        const allProductsLink = document.createElement('a');
+        allProductsLink.href = '/category.html';
+        allProductsLink.className = 'dropdown-item';
+        allProductsLink.textContent = 'Tất cả sản phẩm';
+        allProductsItem.appendChild(allProductsLink);
+        dropdownMenu.appendChild(allProductsItem);
+        
+    } catch (error) {
+        console.error('Error loading categories for menu:', error);
+    }
+}
 
 // Kiểm tra trạng thái đăng nhập và cập nhật UI
 async function checkLoginStatus() {

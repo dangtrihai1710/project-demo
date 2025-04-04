@@ -13,6 +13,21 @@ async function fetchProducts() {
     }
 }
 
+// Lấy sản phẩm theo danh mục
+async function fetchProductsByCategory(categoryId) {
+    try {
+        const response = await fetch(`/api/categories/${categoryId}/products`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch products by category');
+        }
+        const products = await response.json();
+        return products;
+    } catch (error) {
+        console.error('Error fetching products by category:', error);
+        return [];
+    }
+}
+
 // Lấy thông tin chi tiết sản phẩm
 async function fetchProductDetails(productId) {
     try {
@@ -120,28 +135,43 @@ function displayProductDetails(product) {
     `;
     
     // Hiển thị thông số kỹ thuật
-    document.getElementById('product-specs').innerHTML = `
-        <table class="table">
-            <tbody>
+    let specsHTML = '<table class="table">';
+    specsHTML += '<tbody>';
+    
+    if (product.specifications) {
+        // Hiển thị thông số từ dữ liệu sản phẩm
+        for (const [key, value] of Object.entries(product.specifications)) {
+            specsHTML += `
                 <tr>
-                    <th scope="row">Thương hiệu</th>
-                    <td>Brand XYZ</td>
+                    <th scope="row">${formatSpecName(key)}</th>
+                    <td>${value}</td>
                 </tr>
-                <tr>
-                    <th scope="row">Model</th>
-                    <td>XYZ-123</td>
-                </tr>
-                <tr>
-                    <th scope="row">Bảo hành</th>
-                    <td>12 tháng</td>
-                </tr>
-                <tr>
-                    <th scope="row">Xuất xứ</th>
-                    <td>Chính hãng</td>
-                </tr>
-            </tbody>
-        </table>
-    `;
+            `;
+        }
+    } else {
+        // Hiển thị thông số mặc định nếu không có dữ liệu
+        specsHTML += `
+            <tr>
+                <th scope="row">Thương hiệu</th>
+                <td>Brand XYZ</td>
+            </tr>
+            <tr>
+                <th scope="row">Model</th>
+                <td>XYZ-123</td>
+            </tr>
+            <tr>
+                <th scope="row">Bảo hành</th>
+                <td>12 tháng</td>
+            </tr>
+            <tr>
+                <th scope="row">Xuất xứ</th>
+                <td>Chính hãng</td>
+            </tr>
+        `;
+    }
+    
+    specsHTML += '</tbody></table>';
+    document.getElementById('product-specs').innerHTML = specsHTML;
     
     // Hiển thị đánh giá
     document.getElementById('product-reviews').innerHTML = `
@@ -223,6 +253,14 @@ function displayProductDetails(product) {
         const quantity = parseInt(document.getElementById('quantity').value);
         addToCart(product.id, quantity);
     });
+    
+    // Thiết lập sự kiện cho các sao đánh giá
+    document.querySelectorAll('#product-reviews i[data-rating]').forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.getAttribute('data-rating'));
+            setRating(rating);
+        });
+    });
 }
 
 // Tăng số lượng sản phẩm
@@ -238,6 +276,28 @@ function decreaseQuantity() {
     if (currentValue > 1) {
         quantityInput.value = currentValue - 1;
     }
+}
+
+// Thiết lập đánh giá sao
+function setRating(rating) {
+    const stars = document.querySelectorAll('#product-reviews i[data-rating]');
+    stars.forEach(star => {
+        const starRating = parseInt(star.getAttribute('data-rating'));
+        if (starRating <= rating) {
+            star.className = 'bi bi-star-fill fs-5 text-warning';
+        } else {
+            star.className = 'bi bi-star fs-5';
+        }
+    });
+}
+
+// Format tên thông số kỹ thuật
+function formatSpecName(key) {
+    // Chuyển đổi snake_case thành Title Case
+    return key
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
 
 // Format tiền tệ
