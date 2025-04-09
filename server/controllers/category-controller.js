@@ -6,10 +6,13 @@ const productsFile = path.join(__dirname, '../data/products.json');
 // Đọc dữ liệu danh mục từ file
 const getCategories = () => {
   try {
+    if (!fs.existsSync(categoriesFile)) {
+      fs.writeFileSync(categoriesFile, JSON.stringify([]), 'utf8');
+      return [];
+    }
     const data = fs.readFileSync(categoriesFile, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    console.error('Lỗi đọc file categories.json:', error);
     return [];
   }
 };
@@ -17,10 +20,12 @@ const getCategories = () => {
 // Đọc dữ liệu sản phẩm từ file
 const getProducts = () => {
   try {
+    if (!fs.existsSync(productsFile)) {
+      return [];
+    }
     const data = fs.readFileSync(productsFile, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    console.error('Lỗi đọc file products.json:', error);
     return [];
   }
 };
@@ -30,36 +35,37 @@ const saveCategories = (categories) => {
   fs.writeFileSync(categoriesFile, JSON.stringify(categories, null, 2), 'utf8');
 };
 
+// Lưu dữ liệu sản phẩm vào file
+const saveProducts = (products) => {
+  fs.writeFileSync(productsFile, JSON.stringify(products, null, 2), 'utf8');
+};
+
+// Tạo slug từ tên danh mục
+const createSlug = (name) => {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[đĐ]/g, 'd')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, '-');
+};
+
 // Lấy tất cả danh mục
 exports.getAllCategories = (req, res) => {
   try {
     const categories = getCategories();
-    res.status(200).json(categories);
+    const products = getProducts();
+    
+    // Đếm số sản phẩm trong từng danh mục
+    const categoriesWithProductCount = categories.map(category => {
+      const productCount = products.filter(product => product.category === category.id).length;
+      return { ...category, productCount };
+    });
+    
+    res.status(200).json(categoriesWithProductCount);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi lấy danh sách danh mục', error: error.message });
-  }
-};
-
-// Lấy danh mục chính (danh mục cha)
-exports.getMainCategories = (req, res) => {
-  try {
-    const categories = getCategories();
-    const mainCategories = categories.filter(category => category.parentId === null);
-    res.status(200).json(mainCategories);
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi lấy danh sách danh mục chính', error: error.message });
-  }
-};
-
-// Lấy danh mục con của một danh mục
-exports.getSubCategories = (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const categories = getCategories();
-    const subCategories = categories.filter(category => category.parentId === categoryId);
-    res.status(200).json(subCategories);
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi lấy danh sách danh mục con', error: error.message });
   }
 };
 
@@ -75,80 +81,47 @@ exports.getCategoryById = (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy danh mục' });
     }
     
-    res.status(200).json(category);
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi lấy chi tiết danh mục', error: error.message });
-  }
-};
-
-// Lấy chi tiết danh mục theo slug
-exports.getCategoryBySlug = (req, res) => {
-  try {
-    const { slug } = req.params;
-    const categories = getCategories();
-    
-    const category = categories.find(category => category.slug === slug);
-    
-    if (!category) {
-      return res.status(404).json({ message: 'Không tìm thấy danh mục' });
-    }
-    
-    res.status(200).json(category);
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi lấy chi tiết danh mục', error: error.message });
-  }
-};
-
-// Lấy sản phẩm theo danh mục
-exports.getProductsByCategory = (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const categories = getCategories();
+    // Đếm số sản phẩm trong danh mục
     const products = getProducts();
+    const productCount = products.filter(product => product.category === id).length;
     
-    // Kiểm tra xem danh mục có tồn tại không
-    const category = categories.find(category => category.id === categoryId);
-    
-    if (!category) {
-      return res.status(404).json({ message: 'Không tìm thấy danh mục' });
-    }
-    
-    // Lấy tất cả danh mục con (nếu có)
-    const allSubCategories = categories.filter(cat => cat.parentId === categoryId).map(cat => cat.id);
-    
-    // Danh sách tất cả danh mục cần lọc (bao gồm danh mục hiện tại và danh mục con)
-    const allCategories = [categoryId, ...allSubCategories];
-    
-    // Lọc sản phẩm theo danh mục
-    const categoryProducts = products.filter(product => allCategories.includes(product.category));
-    
-    res.status(200).json(categoryProducts);
+    res.status(200).json({ ...category, productCount });
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi lấy sản phẩm theo danh mục', error: error.message });
+    res.status(500).json({ message: 'Lỗi khi lấy chi tiết danh mục', error: error.message });
   }
 };
 
-// Thêm danh mục mới (chỉ admin)
+// Thêm danh mục mới
 exports.addCategory = (req, res) => {
   try {
-    const { name, description, image, slug, parentId, featured, order } = req.body;
+    const { name, slug, description } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({ message: 'Tên danh mục là bắt buộc' });
+    }
+    
     const categories = getCategories();
     
-    // Kiểm tra xem slug đã tồn tại chưa
-    if (categories.some(category => category.slug === slug)) {
-      return res.status(400).json({ message: 'Slug đã tồn tại, vui lòng chọn slug khác' });
+    // Kiểm tra tên danh mục đã tồn tại chưa
+    if (categories.some(cat => cat.name.toLowerCase() === name.toLowerCase())) {
+      return res.status(400).json({ message: 'Tên danh mục đã tồn tại' });
+    }
+    
+    // Tạo slug nếu không được cung cấp
+    const categorySlug = slug ? slug : createSlug(name);
+    
+    // Kiểm tra slug đã tồn tại chưa
+    if (categories.some(cat => cat.slug === categorySlug)) {
+      return res.status(400).json({ message: 'Slug đã tồn tại' });
     }
     
     // Tạo danh mục mới
     const newCategory = {
-      id: slug, // Sử dụng slug làm id
+      id: Date.now().toString(),
       name,
-      description,
-      image,
-      slug,
-      parentId: parentId || null,
-      featured: featured || false,
-      order: order || categories.length + 1
+      slug: categorySlug,
+      description: description || '',
+      createdAt: new Date().toISOString()
     };
     
     categories.push(newCategory);
@@ -160,11 +133,16 @@ exports.addCategory = (req, res) => {
   }
 };
 
-// Cập nhật danh mục (chỉ admin)
+// Cập nhật danh mục
 exports.updateCategory = (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, image, slug, parentId, featured, order } = req.body;
+    const { name, slug, description } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({ message: 'Tên danh mục là bắt buộc' });
+    }
+    
     let categories = getCategories();
     
     // Tìm vị trí danh mục cần cập nhật
@@ -174,56 +152,110 @@ exports.updateCategory = (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy danh mục' });
     }
     
-    // Kiểm tra xem slug mới đã tồn tại chưa (nếu thay đổi slug)
-    if (slug && slug !== categories[index].slug && categories.some(category => category.slug === slug)) {
-      return res.status(400).json({ message: 'Slug đã tồn tại, vui lòng chọn slug khác' });
+    // Kiểm tra tên danh mục đã tồn tại chưa (loại trừ danh mục hiện tại)
+    if (categories.some(cat => cat.name.toLowerCase() === name.toLowerCase() && cat.id !== id)) {
+      return res.status(400).json({ message: 'Tên danh mục đã tồn tại' });
+    }
+    
+    // Tạo slug nếu không được cung cấp hoặc đã thay đổi tên
+    const categorySlug = slug ? slug : (
+      name !== categories[index].name ? createSlug(name) : categories[index].slug
+    );
+    
+    // Kiểm tra slug đã tồn tại chưa (loại trừ danh mục hiện tại)
+    if (categories.some(cat => cat.slug === categorySlug && cat.id !== id)) {
+      return res.status(400).json({ message: 'Slug đã tồn tại' });
     }
     
     // Cập nhật thông tin danh mục
     categories[index] = {
       ...categories[index],
-      name: name || categories[index].name,
+      name,
+      slug: categorySlug,
       description: description || categories[index].description,
-      image: image || categories[index].image,
-      slug: slug || categories[index].slug,
-      parentId: parentId !== undefined ? parentId : categories[index].parentId,
-      featured: featured !== undefined ? featured : categories[index].featured,
-      order: order || categories[index].order
+      updatedAt: new Date().toISOString()
     };
     
     saveCategories(categories);
     
-    res.status(200).json(categories[index]);
+    // Đếm số sản phẩm trong danh mục
+    const products = getProducts();
+    const productCount = products.filter(product => product.category === id).length;
+    
+    res.status(200).json({ ...categories[index], productCount });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi cập nhật danh mục', error: error.message });
   }
 };
 
-// Xóa danh mục (chỉ admin)
+// Xóa danh mục
 exports.deleteCategory = (req, res) => {
   try {
     const { id } = req.params;
     let categories = getCategories();
+    let products = getProducts();
     
     // Kiểm tra xem danh mục có tồn tại không
-    const categoryIndex = categories.findIndex(category => category.id === id);
+    const category = categories.find(category => category.id === id);
     
-    if (categoryIndex === -1) {
+    if (!category) {
       return res.status(404).json({ message: 'Không tìm thấy danh mục' });
     }
     
-    // Kiểm tra xem danh mục có danh mục con không
-    const hasChildren = categories.some(category => category.parentId === id);
+    // Kiểm tra và xử lý các sản phẩm thuộc danh mục này
+    const productsInCategory = products.filter(product => product.category === id);
     
-    if (hasChildren) {
-      return res.status(400).json({ message: 'Không thể xóa danh mục này vì nó có chứa danh mục con' });
+    // Lấy danh sách đơn hàng
+    // Trong một ứng dụng thực tế, bạn sẽ cần kiểm tra xem có sản phẩm nào 
+    // thuộc danh mục này đã được đặt hàng hay không
+    const ordersFile = path.join(__dirname, '../data/orders.json');
+    let orders = [];
+    
+    if (fs.existsSync(ordersFile)) {
+      try {
+        const ordersData = fs.readFileSync(ordersFile, 'utf8');
+        orders = JSON.parse(ordersData);
+      } catch (error) {
+        // Nếu không đọc được file orders.json, giả định không có đơn hàng
+      }
     }
     
-    // Xóa danh mục
-    categories.splice(categoryIndex, 1);
-    saveCategories(categories);
+    // Kiểm tra xem có sản phẩm nào trong danh mục này đã được đặt hàng chưa
+    let hasOrderedProducts = false;
     
-    res.status(200).json({ message: 'Xóa danh mục thành công' });
+    if (productsInCategory.length > 0 && orders.length > 0) {
+      // Lấy tất cả ID sản phẩm thuộc danh mục
+      const productIds = productsInCategory.map(product => product.id);
+      
+      // Kiểm tra từng đơn hàng xem có chứa sản phẩm thuộc danh mục này không
+      hasOrderedProducts = orders.some(order => {
+        // Kiểm tra trong các item của đơn hàng
+        return order.items && order.items.some(item => productIds.includes(item.productId));
+      });
+    }
+    
+    // Nếu có sản phẩm đã được đặt hàng, không cho phép xóa danh mục
+    if (hasOrderedProducts) {
+      return res.status(400).json({ 
+        message: 'Không thể xóa danh mục này vì có sản phẩm đã được đặt hàng.',
+        solution: 'Vui lòng đánh dấu danh mục là không hoạt động thay vì xóa.'
+      });
+    }
+    
+    // Lọc ra các danh mục không bị xóa
+    categories = categories.filter(category => category.id !== id);
+    
+    // Xóa tất cả sản phẩm thuộc danh mục này
+    products = products.filter(product => product.category !== id);
+    
+    // Lưu lại dữ liệu
+    saveCategories(categories);
+    saveProducts(products);
+    
+    res.status(200).json({ 
+      message: 'Xóa danh mục thành công',
+      deletedProductCount: productsInCategory.length
+    });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi khi xóa danh mục', error: error.message });
   }

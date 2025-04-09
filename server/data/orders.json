@@ -1,0 +1,223 @@
+[
+    {
+      "id": "DH2023001",
+      "userId": "2",
+      "items": [
+        {
+          "id": "1689404351521",
+          "productId": "1",
+          "name": "Laptop Gaming Acer Nitro 5",
+          "price": 22990000,
+          "image": "/images/laptop-nitro-5.jpg",
+          "quantity": 1
+        }
+      ],
+      "shippingInfo": {
+        "fullName": "Nguyễn Văn A",
+        "phone": "0987654321",
+        "address": "123 Đường ABC, Quận 1, TP. HCM",
+        "note": "Giao buổi sáng"
+      },
+      "paymentMethod": "COD",
+      "subtotal": 22990000,
+      "shippingFee": 30000,
+      "discount": 0,
+      "total": 23020000,
+      "status": "completed",
+      "createdAt": "2023-07-15T08:30:00.000Z",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "time": "2023-07-15T08:30:00.000Z",
+          "user": "user"
+        },
+        {
+          "status": "processing",
+          "time": "2023-07-15T09:15:00.000Z",
+          "user": "admin"
+        },
+        {
+          "status": "shipped",
+          "time": "2023-07-15T14:20:00.000Z",
+          "user": "admin"
+        },
+        {
+          "status": "completed",
+          "time": "2023-07-16T10:45:00.000Z",
+          "user": "admin"
+        }
+      ]
+    },
+    {
+      "id": "DH2023002",
+      "userId": "2",
+      "items": [
+        {
+          "id": "1689415681234",
+          "productId": "2",
+          "name": "Chuột gaming Logitech G502 HERO",
+          "price": 1790000,
+          "image": "/images/mouse-g502.jpg",
+          "quantity": 1
+        },
+        {
+          "id": "1689415681235",
+          "productId": "3",
+          "name": "Bàn phím cơ Keychron K2",
+          "price": 2190000,
+          "image": "/images/keyboard-keychron.jpg",
+          "quantity": 3
+        }
+      ],
+      "shippingInfo": {
+        "fullName": "Trần Thị B",
+        "phone": "0123456789",
+        "address": "456 Đường XYZ, Quận 2, TP. HCM",
+        "note": ""
+      },
+      "paymentMethod": "Bank Transfer",
+      "subtotal": 8360000,
+      "shippingFee": 30000,
+      "discount": 0,
+      "total": 8390000,
+      "status": "processing",
+      "createdAt": "2023-07-16T10:15:00.000Z",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "time": "2023-07-16T10:15:00.000Z",
+          "user": "user"
+        },
+        {
+          "status": "processing",
+          "time": "2023-07-16T11:30:00.000Z",
+          "user": "admin"
+        }
+      ]
+    },
+    {
+      "id": "DH2023003",
+      "userId": "guest",
+      "items": [
+        {
+          "id": "1689495123456",
+          "productId": "5",
+          "name": "PC Gaming Intel Core i7",
+          "price": 25990000,
+          "image": "/images/pc-gaming.jpg",
+          "quantity": 1
+        }
+      ],
+      "shippingInfo": {
+        "fullName": "Lê Văn C",
+        "phone": "0909123456",
+        "address": "789 Đường DEF, Quận 3, TP. HCM",
+        "note": "Gọi trước khi giao"
+      },
+      "paymentMethod": "COD",
+      "subtotal": 25990000,
+      "shippingFee": 0,
+      "discount": 0,
+      "total": 25990000,
+      "status": "pending",
+      "createdAt": "2023-07-16T14:30:00.000Z",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "time": "2023-07-16T14:30:00.000Z",
+          "user": "user"
+        }
+      ]
+    },
+    {
+      "id": "DH2023004",
+      "userId": "2",
+      "items": [
+        {
+          "id": "1689583456789",
+          "productId": "4",
+          "name": "Màn hình Gaming ASUS TUF 27\"",
+          "price": 7490000,
+          "image": "/images/monitor-asus.jpg",
+          "quantity": 2
+        },
+        {
+          "id": "1689583456790",
+          "productId": "6",
+          "name": "Card đồ họa NVIDIA RTX 3070",
+          "price": 18500000,
+          "image": "/images/gpu-rtx.jpg",
+          "quantity": 1
+        }
+      ],
+      "shippingInfo": {
+        "fullName": "Phạm Thị D",
+        "phone": "0777456789",
+        "address": "101 Đường GHI, Quận 7, TP. HCM",
+        "note": ""
+      },
+      "paymentMethod": "Credit Card",
+      "subtotal": 33480000,
+      "shippingFee": 30000,
+      "discount": 2500000,
+      "total": 31010000,
+      "status": "shipped",
+      "createdAt": "2023-07-17T09:45:00.000Z",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "time": "2023-07-17T09:45:00.000Z",
+          "user": "user"
+        },
+        {
+          "status": "processing",
+          "time": "2023-07-17T10:30:00.000Z",
+          "user": "admin"
+        },
+        {
+          "status": "shipped",
+          "time": "2023-07-17T15:20:00.000Z",
+          "user": "admin"
+        }
+      ]
+    },
+    {
+      "id": "DH2023005",
+      "userId": "guest",
+      "items": [
+        {
+          "id": "1689587654321",
+          "productId": "8",
+          "name": "Tai nghe Gaming HyperX Cloud II",
+          "price": 2490000,
+          "image": "/images/headset-hyperx.jpg",
+          "quantity": 2
+        }
+      ],
+      "shippingInfo": {
+        "fullName": "Hoàng Văn E",
+        "phone": "0912345678",
+        "address": "222 Đường JKL, Quận 5, TP. HCM",
+        "note": ""
+      },
+      "paymentMethod": "COD",
+      "subtotal": 4980000,
+      "shippingFee": 30000,
+      "discount": 0,
+      "total": 5010000,
+      "status": "cancelled",
+      "createdAt": "2023-07-17T16:20:00.000Z",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "time": "2023-07-17T16:20:00.000Z",
+          "user": "user"
+        },
+        {
+          "status": "cancelled",
+          "time": "2023-07-17T18:15:00.000Z",
+          "user": "user"
+        }
+      ]
+    }
+  ]
