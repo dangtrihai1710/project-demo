@@ -4,8 +4,17 @@
     "total": 0
   },
   "2": {
-    "items": [],
-    "total": 0
+    "items": [
+      {
+        "id": "1743869612628",
+        "productId": "1",
+        "name": "Laptop Gaming Acer Nitro 5",
+        "price": 22990000,
+        "image": "/images/laptop-nitro-5.jpg",
+        "quantity": 2
+      }
+    ],
+    "total": 45980000
   },
   "guest": {
     "items": [],
